@@ -16,12 +16,25 @@
     //limpieza de llave valor del $_POST
     LimpiezaKV();
     $conn = conexion();
+    
     if (isset($_SESSION['usuario'])) {
-        
+        $rolActual = $_SESSION['usuario']['rol'];   
         //Boton para ir al inicio 
         if (isset($_POST['lnkHome'])) {
             if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] || '0000' == $_POST['anticsrf']) {
-                header("Location: inicio_admin.php");
+              
+                switch($rolActual){
+                    case 'Administrador':
+                      header("refresh:2;url=inicio_admin.php");
+                      break;
+                      case 'Docente':
+                        header("refresh:2;url=inicio_docente.php");
+                        break;
+                        case 'Alumno':
+                          header("refresh:2;url=inicio_alumno.php");
+                          break;
+                  }            
+                
                 
             } else {
                 notificaciones('petición invalida');
