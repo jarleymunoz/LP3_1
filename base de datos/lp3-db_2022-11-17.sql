@@ -113,7 +113,7 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`id_usuario`, `identificacion`, `primer_apellido`, `segundo_apellido`, `nombre`, `email`, `usuario`, `clave`, `rol`, `token`) VALUES
 (1, '123456789', 'Munoz', 'Lara', 'Jose', 'admonlp3@gmail.com', 'joarl940', '$2y$10$MAUx.T0Dwvynow4QwbJyNe7r2nonb1UjTkj2GJSe/Hh8eUXSVWDwS', 1, NULL),
-(2, '516516157', 'Trivino', 'Barrera', 'Ricardo', 'estudiantelp3@gmail.com', 'rtrivino', '$2y$10$F8Go6Jg2J4s3fAkpid/x.edRi3O/DWQ933kA6CHyi5KDEbmAghp1u', 3, NULL),
+(2, '516516157', 'Trivino', 'Barrera', 'Ricardo', 'estudiantelp3@gmail.com', 'rtrivino', '$2y$10$F8Go6Jg2J4s3fAkpid/x.edRi3O/DWQ933kA6CHyi5KDEbmAghp1u', 3, NULL);
 
 --
 -- Índices para tablas volcadas
