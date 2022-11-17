@@ -62,7 +62,13 @@
         notificaciones('Nombre inválido');
         $nombre = "";
       }
-      
+      //asigno correo
+      if (validarCorreo($_POST['txtCorreo']) == true) {
+        $correo = Limpieza($_POST["txtCorreo"]);
+      } else {
+        notificaciones('Correo inválido');
+        $correo = "";
+      }
      //asigno a usuario
       if (validarUsuario($_POST['txtUsuario'])) {
         $usuario = Limpieza($_POST["txtUsuario"]);
@@ -90,13 +96,15 @@
       }
     
       if ($identificacion != "" && $primerApellido != "" && $segundoApellido != "" && $nombre != "" &&
-             $usuario != "" && $clave != "" && $rol != "" ) {
+             $correo != "" && $usuario != "" && $clave != "" && $rol != "" ) {
         //Busco el usuario en la base de datos para que no se repita
-        $query = $conn->prepare("SELECT usuario 
+        $query = $conn->prepare("SELECT usuario, email 
                                  FROM   usuario 
-                                 WHERE  usuario =:usuario");
+                                 WHERE  usuario =:usuario
+                                 or email =:correo");
         $res = $query->execute([
-          'usuario' => $usuario
+          'usuario' => $usuario,
+          'correo' => $correo
         ]);
         if ($res == true) {
           $usua =  $query->fetchAll(PDO::FETCH_OBJ);
@@ -106,6 +114,7 @@
                                                            primer_apellido,
                                                            segundo_apellido,
                                                            nombre,
+                                                           email,
                                                            usuario,
                                                            clave,
                                                            rol
@@ -114,6 +123,7 @@
                                              :primerApellido,
                                              :segundoApellido,
                                              :nombre,
+                                             :correo,
                                              :usuario,
                                              :clave,
                                              :rol)");
@@ -122,6 +132,7 @@
               'primerApellido' => $primerApellido,
               'segundoApellido' => $segundoApellido,
               'nombre' => $nombre,
+              'correo' => $correo,
               'usuario' => $usuario,
               'clave' => $claveHash,
               'rol' => $rol
@@ -132,7 +143,7 @@
               header("refresh:1;url: usuarios.php");
             }
           } else {
-            notificaciones('Usuario ya existe');
+            notificaciones('Usuario o correo ya existe');
             header("refresh:2;url: crearUsuario.php");
           }
         }
@@ -164,7 +175,9 @@
           <option value=1>Administrador</option>
           <option value=2>Docente</option>
           <option value=3>Alumno</option>
-        </select></p>
+        </select>
+      </p>
+      <p><input type="email" placeholder="Correo" id="txtCorreo" name="txtCorreo" required="required"></p>
       <p><input type="text" placeholder="Usuario" id="txtUsuario" name="txtUsuario" pattern="[A-Za-z0-9]+" required="required"></p>
       <p><input type="password" placeholder="Clave" id="txtClave" name="txtClave"></p>
 

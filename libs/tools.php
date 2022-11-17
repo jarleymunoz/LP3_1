@@ -1,6 +1,14 @@
 <?php
 //require_once '../vendor/autoload.php'; //libreria de composer
 use Firebase\JWT\JWT; //libreria de jwt
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+//require '../vendor/PHPMailer/PHPMailer/src/Exception.php';
+//require '../vendor/PHPMailer/PHPMailer/src/PHPMailer.php';
+//require '../vendor/PHPMailer/PHPMailer/src/SMTP.php';
+require 'vendor/autoload.php';
+
 /**
  * Función que retorna el usuario actual con inicio de sesión con token
  */
@@ -338,6 +346,133 @@ function base64_to_jpeg($base64_string, $output_file) {
     // clean up the file resource
     fclose( $ifp ); 
     return $output_file; 
+}
+
+/**
+ * Función para buscar email
+ */
+function buscarEmail($emailRec) {
+    //var_dump($emailRec);
+    //Buscamos email en bd
+    $conn = conexion();
+    $query = $conn->prepare("SELECT usuario 
+                            FROM usuario 
+                            WHERE email=:email ");
+    $res = $query->execute([
+        'email' => $emailRec
+    ]);
+
+    if ($res == true) {
+        $usuario = $query->fetchAll(PDO::FETCH_OBJ);
+        if (sizeof($usuario) > 0) {
+            //var_dump($usuario);
+            $usu = array($usuario[0]);
+            //var_dump($usu);
+            $us = $usu[0];
+            //var_dump($us);
+            $token =& crearToken();
+            //echo $token;
+            foreach ($us as $key => $value) {
+                //echo "$key: $value\n";
+                //enviar email
+                enviarInstrucciones($value, $emailRec, $token);
+            }
+        }
+        else {
+            //notificación segura
+            notificaciones('Si tienes una cuenta se te envío un correo, revisalo');
+            //notificaciones('Email no encontrado');
+        }
+    }
+    else {
+        notificaciones('Hubo un problema');
+    }
+}
+
+function enviarInstrucciones($usuario, $email, $token) {
+    define("EMAIL_ADMIN", 'admin@linea3.com');
+    define("EMAIL_USER", $email);
+    $mail = new PHPMailer();
+    $mail->isSMTP();
+    //server gmail
+    $mail->Host = 'smtp.gmail.com';
+    //$mail->Host = 'smtp.mailtrap.io';
+    $mail->SMTPAuth = true;
+    //gmail port
+    $mail->Port = 465;
+    //$mail->Port = 2525;
+
+    //gmail username and pasword
+    $mail->Username = 'testestek@gmail.com';
+    $mail->Password = 'hbepkwbznnnrpbuv';
+    //$mail->Username = '3c1408f64d5eef';
+    //$mail->Password = '5126b6257cf846';
+    //$mail->SMTPSecure = 'tls';
+    $mail->SMTPSecure = 'ssl';
+
+    //contenido del email
+    //$mail->setFrom('admin@linea3.com');
+    $mail->setFrom(EMAIL_ADMIN);
+    //$mail->addAddress('user@linea3.com', 'LP3');
+    $mail->addAddress(EMAIL_USER, 'lp3');
+    $mail->Subject = 'Restablece tu clave';
+
+    //habilitar html
+    $mail->isHTML(true);
+    $mail->CharSet = 'UTF-8';
+
+    //definir contenido
+    $contenido = '<html>';
+    $contenido .= "<p><strong>Hola " . $usuario . "</strong> Has solicitado restablecer tu clave, 
+    da click en el siguiente enlace para restablecerla.</p>";
+    $contenido .= "<p>Presiona aquí: <a href='http://localhost/LP3_1/restablecer.php?token=" .
+    $token . "&usuario=" . $usuario . "'>Restablecer clave</a>";
+    $contenido .= "<p>Si tu no solicitaste este cambio, puedes ignorar el mensaje</p>";
+    $contenido .= "</html>";
+
+    $mail->Body = $contenido;
+    $mail->AltBody = 'Texto alternativo sin HTML';
+
+    //enviar email
+    if($mail->send()) {
+        $conn = conexion();
+        //Insertar token al usuario
+        try {
+            $query1 = $conn->prepare("UPDATE usuario 
+                                                    SET token=:token 
+                                                    WHERE usuario=:usuario");
+                            $res1 = $query1->execute([
+                                'token' => $token,
+                                'usuario' => $usuario
+                            ]);
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+        /*if ($res1 == true) {
+            //notificacion de exito
+            notificaciones('Mensaje enviado correctamente');
+            notificaciones('Exito, revisa tu correo');
+            //notificación segura
+            //notificaciones('Si tienes una cuenta se te envío un correo, revisalo');
+        } else {
+            //notificacion de fallo
+            notificaciones('El mensaje no se pudo enviar 1');
+            notificaciones('Lo sentimos, algo falló 1');
+            //notificación segura
+            //notificaciones('Si tienes una cuenta se te envío un correo, revisalo');
+        }*/
+        //notificación segura
+        notificaciones('Si tienes una cuenta se te envío un correo, revisalo');
+    }
+    else {
+        notificaciones('Hubo un problema');
+    }
+}
+
+// Generar un Token
+function &crearToken() {
+    $token = uniqid();
+    return $token;
 }
 
 ?>

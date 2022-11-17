@@ -66,6 +66,13 @@
                 notificaciones('Nombre inválido');
                 $nombre = "";
             }
+            //asigno correo
+            if (validarCorreo($_POST['txtCorreo']) == true) {
+                $correo = Limpieza($_POST["txtCorreo"]);
+            } else {
+                notificaciones('Correo inválido');
+                $correo = "";
+            }
             //asigno a rol
             $roles = [1, 2, 3];
             if (in_array($_POST['txtRol'], $roles)) {
@@ -75,12 +82,13 @@
                 $rol = "";
             }
 
-            if ($identificacion != "" && $primerApellido != "" && $segundoApellido != "" && $nombre != ""&& $rol != "") {
+            if ($identificacion != "" && $primerApellido != "" && $segundoApellido != "" && $nombre != "" && $correo != "" && $rol != "") {
                 $query1 = $conn->prepare("UPDATE  usuario SET 
                                               identificacion=:identificacion, 
                                               primer_apellido=:primerApellido, 
                                               segundo_apellido=:segundoApellido, 
                                               nombre=:nombre, 
+                                              email=:correo
                                               rol=:rol                                  
                                               WHERE id_usuario=:id_usuario");
                 $res1 = $query1->execute([
@@ -88,6 +96,7 @@
                     'primerApellido' => $primerApellido,
                     'segundoApellido' => $segundoApellido,
                     'nombre' => $nombre,
+                    'correo' => $correo,
                     'rol' => $rol,
                     'id_usuario' => $idUsuarioActual
                 ]);
@@ -129,6 +138,7 @@
                         <option value=3>Alumno</option>
                     </select>
                 </p>
+                <p><input type="email" placeholder="Correo" id="txtCorreo" name="txtCorreo" required="required"></p>
 
                 <p><input type="submit" value="Actualizar usuario" name="btnActualizar"></p>
             </form>
