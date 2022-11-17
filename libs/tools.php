@@ -390,7 +390,7 @@ function buscarEmail($emailRec) {
 }
 
 function enviarInstrucciones($usuario, $email, $token) {
-    define("EMAIL_ADMIN", 'admonlp3@gmail.com');
+    define("EMAIL_ADMIN", 'servidor2lp3@gmail.com');
     define("EMAIL_USER", $email);
     $mail = new PHPMailer();
     $mail->isSMTP();
@@ -403,8 +403,8 @@ function enviarInstrucciones($usuario, $email, $token) {
     //$mail->Port = 2525;
 
     //gmail username and pasword
-    $mail->Username = 'admonlp3@gmail.com';
-    $mail->Password = 'hbjyvpkqeelqduia';
+    $mail->Username = 'servidor2lp3@gmail.com';
+    $mail->Password = 'dlzvnvoolwdbichl';
     //$mail->Username = '3c1408f64d5eef';
     //$mail->Password = '5126b6257cf846';
     //$mail->SMTPSecure = 'tls';
