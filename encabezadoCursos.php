@@ -10,14 +10,7 @@
 
 <body>
     <?php
-    if (isset($_POST["lnkBuscar"])) {
-        if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] || '0000' == $_POST['anticsrf']) {
-            header("Location: buscarCurso.php");
-        } else {
-            notificaciones('petición invalida');
-        }
-    }
-
+   
     if (isset($_POST["lnkCrear"])) {
         if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] || '0000' == $_POST['anticsrf']) {
             header("Location: crearCurso.php");
@@ -25,18 +18,9 @@
             notificaciones('petición invalida');
         }
     }
-
-    if (isset($_POST["lnkModificar"])) {
+    if (isset($_POST["lnkVolver"])) {
         if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] || '0000' == $_POST['anticsrf']) {
-            header("Location: modificarCurso.php");
-        } else {
-            notificaciones('petición invalida');
-        }
-    }
-
-    if (isset($_POST["lnkEliminar"])) {
-        if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] || '0000' == $_POST['anticsrf']) {
-            header("Location: eliminarCurso.php");
+            header("Location: inicio_admin.php");
         } else {
             notificaciones('petición invalida');
         }
@@ -49,13 +33,10 @@
             <form method="post">
                 <br>
                 <p><input type="hidden" id="anticsrf" name="anticsrf" value="<?php echo $_SESSION['anticsrf'] ?>"></p>
-                <input type="submit" class="login" name="lnkBuscar" value="Buscar curso">
-
+           
                 <input type="submit" class="login" name="lnkCrear" value="Crear curso">
+                <input type="submit" class="login" name="lnkVolver" value="Volver">
 
-                <input type="submit" class="login" name="lnkModificar" value="Modificar curso">
-
-                <input type="submit" class="login" name="lnkEliminar" value="Eliminar curso">
             </form>
         </div>
     </div>

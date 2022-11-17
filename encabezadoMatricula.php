@@ -10,14 +10,7 @@
 
 <body>
     <?php
-    if (isset($_POST["lnkBuscar"])) {
-        if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] || '0000' == $_POST['anticsrf']) {
-            header("Location: buscarMatricula.php");
-        } else {
-            notificaciones('petición invalida');
-        }
-    }
-
+ 
     if (isset($_POST["lnkCrear"])) {
         if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] || '0000' == $_POST['anticsrf']) {
             header("Location: crearMatricula.php");
@@ -25,37 +18,25 @@
             notificaciones('petición invalida');
         }
     }
-
-    if (isset($_POST["lnkModificar"])) {
+    if (isset($_POST["lnkVolver"])) {
         if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] || '0000' == $_POST['anticsrf']) {
-            header("Location: modificarMatricula.php");
+            header("Location: inicio_admin.php");
         } else {
             notificaciones('petición invalida');
         }
     }
 
-    if (isset($_POST["lnkEliminar"])) {
-        if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] || '0000' == $_POST['anticsrf']) {
-            header("Location: eliminarMatricula.php");
-        } else {
-            notificaciones('petición invalida');
-        }
-    }
-
-    ?>
+?>
     <!-- partial:index.partial.html -->
     <div class="index">
         <div class="index input">
             <form method="post">
                 <br>
                 <p><input type="hidden" id="anticsrf" name="anticsrf" value="<?php echo $_SESSION['anticsrf'] ?>"></p>
-                <input type="submit" class="login" name="lnkBuscar" value="Buscar matrícula">
-
+                
                 <input type="submit" class="login" name="lnkCrear" value="Crear matrícula">
+                <input type="submit" class="login" name="lnkVolver" value="Volver">
 
-                <input type="submit" class="login" name="lnkModificar" value="Modificar matrícula">
-
-                <input type="submit" class="login" name="lnkEliminar" value="Eliminar matrícula">
             </form>
         </div>
     </div>

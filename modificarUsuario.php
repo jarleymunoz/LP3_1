@@ -16,34 +16,58 @@
     }
 
     $idUsuarioActual = $_SESSION['usuario']['id'];
-
-    $query = $conn->prepare("SELECT identificacion,
-                                    primer_apellido,
-                                    segundo_apellido,
-                                    nombre,
-                                    rol
-                               FROM usuario WHERE id_usuario=:id_usuario ");
-    $res = $query->execute([
-        'id_usuario' => $idUsuarioActual
-    ]);
-    if ($res == true) {
-        $usuario = $query->fetchAll(PDO::FETCH_OBJ);
-    }
-
+    $usuarios =null;
+    $idUsuario=null;
+    //Botón para volver a menú usuarios
     if (isset($_POST['btnVolver'])) {
         header("Location: usuarios.php");
     }
-
-    if (isset($_POST["btnActualizar"])) {
-
+    //Botón  para buscar el usuario a modificar
+    if (isset($_POST["btnBuscar"])) {
         if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf']) {
 
             //asigno a identificacion
-            if (validarDocumento($_POST['txtIdentificacion']) == true) {
-                $identificacion = Limpieza($_POST["txtIdentificacion"]);
+            if (validarDocumento($_POST['txtIdentificacion1']) == true) {
+                $identificacion = Limpieza($_POST["txtIdentificacion1"]);
             } else {
                 notificaciones('Identificación inválida');
                 $identificacion = "";
+            }
+            //query para extraer usuario para modificar
+            $query = $conn->prepare("SELECT id_usuario, 
+                                    identificacion,
+                                    primer_apellido,
+                                    segundo_apellido,
+                                    nombre,
+                                    rol   
+                                     FROM usuario
+                                     WHERE id_usuario!=$idUsuarioActual
+                                     and identificacion=:identificacion
+                                    ");
+            $res = $query->execute([
+                'identificacion' => $identificacion
+            ]);
+            if ($res == true) {
+                $usuarios = $query->fetchAll(PDO::FETCH_OBJ);
+                
+                
+            }else{
+                notificaciones('Identificación inválida');
+            }
+        }
+    }
+    
+    
+    if (isset($_POST["btnActualizar"])) {
+        $idUsuario=$_SESSION['usuario']['id_modi'];
+        if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf']) {
+            
+            //asigno a identificacion
+            if (validarDocumento($_POST['txtIdentificacion']) == true) {
+                $identificacion1 = Limpieza($_POST["txtIdentificacion"]);
+            } else {
+                notificaciones('Identificación inválida');
+                $identificacion1 = "";
             }
             //asigno a primer apellido
             if (validarTexto($_POST['txtPrimerApellido']) == true) {
@@ -75,7 +99,7 @@
                 $rol = "";
             }
 
-            if ($identificacion != "" && $primerApellido != "" && $segundoApellido != "" && $nombre != ""&& $rol != "") {
+            if ($identificacion1 != "" && $primerApellido != "" && $segundoApellido != "" && $nombre != "" && $rol != "") {
                 $query1 = $conn->prepare("UPDATE  usuario SET 
                                               identificacion=:identificacion, 
                                               primer_apellido=:primerApellido, 
@@ -84,54 +108,71 @@
                                               rol=:rol                                  
                                               WHERE id_usuario=:id_usuario");
                 $res1 = $query1->execute([
-                    'identificacion' => $identificacion,
+                    'identificacion' => $identificacion1,
                     'primerApellido' => $primerApellido,
                     'segundoApellido' => $segundoApellido,
                     'nombre' => $nombre,
                     'rol' => $rol,
-                    'id_usuario' => $idUsuarioActual
+                    'id_usuario' => $idUsuario
                 ]);
                 if ($res1 == true) {
 
                     notificaciones('Datos actualizados');
-                    header("refresh:2;url=usuarios.php");
+                    header("refresh:2;url=modificarUsuario.php");
                 }
             } else {
                 notificaciones('Datos faltantes');
-                header("refresh:2;url=perfil.php");
+                header("refresh:2;url=modificarUsuario.php");
             }
         } else {
             notificaciones('Petición inválida');
-            header("refresh:2;url=perfil.php");
+            header("refresh:2;url=modificarUsuario.php");
         }
     }
 
     anticsrf();
 
-    foreach ($usuario as $data) {
+    
     ?>
+    <!-- partial:index.partial.html -->
+    <div class="login">
 
-        <!-- partial:index.partial.html -->
-        <div class="login">
-
-            <h2 class="register-header">Modificar usuario</h2>
-
+        <h2 class="register-header">Modificar usuario</h2>
+        <form class="register-container" method="post" enctype="multipart/form-data">
+                <p><input type="hidden" id="anticsrf" name="anticsrf" value="<?php echo $_SESSION['anticsrf'] ?>"></p>
+                <p><input type="text" placeholder="Identificación" id="txtIdentificacion1" name="txtIdentificacion1"  pattern="[A-Za-z0-9]+" required="required"></p>
+                <p><input type="submit" value="Buscar usuario" name="btnBuscar"></p>
+        </form> 
+        
+            
+        <?php if ($usuarios!=null) {
+            foreach ($usuarios as $data) {  
+                $_SESSION['usuario']['id_modi']=$data->id_usuario;
+                
+                ?>
+            
             <form class="register-container" method="post" enctype="multipart/form-data">
                 <p><input type="hidden" id="anticsrf" name="anticsrf" value="<?php echo $_SESSION['anticsrf'] ?>"></p>
                 <p><input type="text" placeholder="Identificación" id="txtIdentificacion" name="txtIdentificacion" value="<?php echo $data->identificacion ?>" pattern="[A-Za-z0-9]+" required="required"></p>
-                <p><input type="text" placeholder="Primer apellido" id="txtPrimerApellido" name="txtPrimerApellido" value="<?php echo $data->primerApellido ?>" pattern="[A-Za-z]+" required="required"></p>
-                <p><input type="text" placeholder="Segundo apellido" id="txtSegundoApellido" name="txtSegundoApellido" value="<?php echo $data->segundoApellido ?>" pattern="[A-Za-z]+" required="required"></p>
+                <p><input type="text" placeholder="Primer apellido" id="txtPrimerApellido" name="txtPrimerApellido" value="<?php echo $data->primer_apellido ?>" pattern="[A-Za-z]+" required="required"></p>
+                <p><input type="text" placeholder="Segundo apellido" id="txtSegundoApellido" name="txtSegundoApellido" value="<?php echo $data->segundo_apellido ?>" pattern="[A-Za-z]+" required="required"></p>
                 <p><input type="text" placeholder="Nombre" id="txtNombre" name="txtNombre" value="<?php echo $data->nombre ?>" pattern="[A-Za-z]+" required="required"></p>
                 <p>Rol
                     <select id="txtRol" name="txtRol" value="<?php echo $data->rol ?>" required="required">
+                        <option value=0></option>    
                         <option value=1>Administrador</option>
                         <option value=2>Docente</option>
                         <option value=3>Alumno</option>
                     </select>
                 </p>
+                
 
                 <p><input type="submit" value="Actualizar usuario" name="btnActualizar"></p>
             </form>
+            <?php
+            }   
+    }
+?>
             <form class="register-container" method="post" enctype="multipart/form-data">
                 <p><input type="hidden" id="anticsrf" name="anticsrf" value="<?php echo $_SESSION['anticsrf'] ?>"></p>
                 <p><input action="usuarios.php" type="submit" value="Volver" name="btnVolver"></p>
@@ -143,6 +184,3 @@
 </body>
 
 </html>
-<?php
-    }
-?>
