@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 01-11-2022 a las 03:12:57
+-- Tiempo de generación: 17-11-2022 a las 14:13:50
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.4.5
 
@@ -100,21 +100,25 @@ CREATE TABLE `usuario` (
   `primer_apellido` varchar(50) NOT NULL,
   `segundo_apellido` varchar(50) NOT NULL,
   `nombre` varchar(50) NOT NULL,
+  `email` varchar(200) NOT NULL,
   `usuario` varchar(20) NOT NULL,
   `clave` varchar(100) NOT NULL,
-  `rol` int(1) NOT NULL
+  `rol` int(1) NOT NULL,
+  `token` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `identificacion`, `primer_apellido`, `segundo_apellido`, `nombre`, `usuario`, `clave`, `rol`) VALUES
-(1, '123456789', 'Munoz', 'Lara', 'Jose', 'joarl940', '$2y$10$ZySqBAnQd8IYDbEK73qvkuQSBndE/ZxAelX3pwbwd7aNLSIjjCvD.', 1),
-(2, '987654321', 'Melo', 'Camacho', 'Adriana', 'Amelo', '$2y$10$ZySqBAnQd8IYDbEK73qvkuQSBndE/ZxAelX3pwbwd7aNLSIjjCvD.', 2),
-(3, '1122334455', 'Melo', 'Melo', 'Alexandra', 'AlexMelo', '$2y$10$2GHBJuivvWGYwOCZK08SIO07SrUl1W0FOG1KjdurbNA8qSmcKrF6i', 3),
-(16, '7686578', 'Perez', 'Gomez', 'Daniel', 'Dapepe', '$2y$10$Z.TfZe/hSsFBG6oN6HWfFuOPF3CGnnW9MoFgv75CXfWWXV1sxBpum', 3),
-(17, '777777', 'caceres', 'forero', 'felipe', 'fecafo', '$2y$10$rHyDwq1/GT0JsN8nfVDmA.SvObnuuIRARXs1bxEppLypRewlpqR/C', 3);
+INSERT INTO `usuario` (`id_usuario`, `identificacion`, `primer_apellido`, `segundo_apellido`, `nombre`, `email`, `usuario`, `clave`, `rol`, `token`) VALUES
+(1, '123456789', 'Munoz', 'Lara', 'Jose', 'testestek@gmail.com', 'joarl940', '$2y$10$MAUx.T0Dwvynow4QwbJyNe7r2nonb1UjTkj2GJSe/Hh8eUXSVWDwS', 1, '6372fda690cf0'),
+(2, '987654321', 'Melo', 'Camacho', 'Adriana', 'amelo@gmail.com', 'Amelo', '$2y$10$ZySqBAnQd8IYDbEK73qvkuQSBndE/ZxAelX3pwbwd7aNLSIjjCvD.', 2, '6372fdc63b3a9'),
+(3, '1122334455', 'Melo', 'Melo', 'Alexandra', 'alexmelo@gmail.com', 'AlexMelo', '$2y$10$2GHBJuivvWGYwOCZK08SIO07SrUl1W0FOG1KjdurbNA8qSmcKrF6i', 3, NULL),
+(16, '7686578', 'Perez', 'Gomez', 'Daniel', 'dapepe@gmail.com', 'Dapepe', '$2y$10$Z.TfZe/hSsFBG6oN6HWfFuOPF3CGnnW9MoFgv75CXfWWXV1sxBpum', 3, NULL),
+(17, '777777', 'caceres', 'forero', 'felipe', 'fecafo@gmail.com', 'fecafo', '$2y$10$rHyDwq1/GT0JsN8nfVDmA.SvObnuuIRARXs1bxEppLypRewlpqR/C', 3, NULL),
+(18, '51651615', 'Trivino', 'Barrera', 'Ricardo', 'ricardo.trivinob@gmail.com', 'rtrivino', '$2y$10$F8Go6Jg2J4s3fAkpid/x.edRi3O/DWQ933kA6CHyi5KDEbmAghp1u', 3, NULL),
+(19, '1651651', 'Trivino', 'Barrera', 'Andrey', 'andrey@gmail.com', 'andrey', '$2y$10$AYVV1AQZbuMx5yMhgvwZ7ergVNoROpeA9FRbu8ofrTkysfKmU.Ap6', 3, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -170,7 +174,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id_usuario` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

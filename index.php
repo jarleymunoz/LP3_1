@@ -49,14 +49,14 @@
               notificaciones('Datos válidos');
               switch($rol){
                 case 1:
-                  header("refresh:2;url=inicio_admin.php");
-                  break;
-                  case 2:
-                    header("refresh:2;url=inicio_docente.php");
-                    break;
-                    case 3:
-                      header("refresh:2;url=inicio_alumno.php");
-                      break;
+                header("refresh:2;url=inicio_admin.php");
+                break;
+                case 2:
+                header("refresh:2;url=inicio_docente.php");
+                break;
+                case 3:
+                header("refresh:2;url=inicio_alumno.php");
+                break;
               }              
             } else {
               notificaciones('Clave incorrecta');
@@ -74,9 +74,9 @@
     }
   }
   //Botón de Restablecer clave
-  if (isset($_POST["btnRestablecer"])) {
+  if (isset($_POST["btnOlvide"])) {
     if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] ) {
-      header("Location: restablecer.php");
+      header("Location: olvide.php");
     } else {
       notificaciones('Petición invalida');
     }
@@ -100,7 +100,7 @@
     </form>
     <form class="login-container" method="post">
     <input type="hidden" id="anticsrf" name="anticsrf" value="<?php echo $_SESSION['anticsrf'] ?>">
-      <p><input type="submit" name="btnRestablecer" value="Restablecer clave"></p>
+      <p><input type="submit" name="btnOlvide" value="Olvidé mi clave"></p>
     </form>
   </div>
   <!-- partial -->

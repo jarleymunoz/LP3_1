@@ -90,6 +90,13 @@
                 notificaciones('Nombre inválido');
                 $nombre = "";
             }
+            //asigno correo
+            if (validarCorreo($_POST['txtCorreo']) == true) {
+                $correo = Limpieza($_POST["txtCorreo"]);
+            } else {
+                notificaciones('Correo inválido');
+                $correo = "";
+            }
             //asigno a rol
             $roles = [1, 2, 3];
             if (in_array($_POST['txtRol'], $roles)) {
@@ -99,12 +106,17 @@
                 $rol = "";
             }
 
+<<<<<<< HEAD
             if ($identificacion1 != "" && $primerApellido != "" && $segundoApellido != "" && $nombre != "" && $rol != "") {
+=======
+            if ($identificacion != "" && $primerApellido != "" && $segundoApellido != "" && $nombre != "" && $correo != "" && $rol != "") {
+>>>>>>> 0831699c67fd5fba33bf518f648533591e7ce3d4
                 $query1 = $conn->prepare("UPDATE  usuario SET 
                                               identificacion=:identificacion, 
                                               primer_apellido=:primerApellido, 
                                               segundo_apellido=:segundoApellido, 
                                               nombre=:nombre, 
+                                              email=:correo
                                               rol=:rol                                  
                                               WHERE id_usuario=:id_usuario");
                 $res1 = $query1->execute([
@@ -112,6 +124,7 @@
                     'primerApellido' => $primerApellido,
                     'segundoApellido' => $segundoApellido,
                     'nombre' => $nombre,
+                    'correo' => $correo,
                     'rol' => $rol,
                     'id_usuario' => $idUsuario
                 ]);
@@ -165,7 +178,11 @@
                         <option value=3>Alumno</option>
                     </select>
                 </p>
+<<<<<<< HEAD
                 
+=======
+                <p><input type="email" placeholder="Correo" id="txtCorreo" name="txtCorreo" required="required"></p>
+>>>>>>> 0831699c67fd5fba33bf518f648533591e7ce3d4
 
                 <p><input type="submit" value="Actualizar usuario" name="btnActualizar"></p>
             </form>
