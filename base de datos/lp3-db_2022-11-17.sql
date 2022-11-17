@@ -112,13 +112,8 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `identificacion`, `primer_apellido`, `segundo_apellido`, `nombre`, `email`, `usuario`, `clave`, `rol`, `token`) VALUES
-(1, '123456789', 'Munoz', 'Lara', 'Jose', 'testestek@gmail.com', 'joarl940', '$2y$10$MAUx.T0Dwvynow4QwbJyNe7r2nonb1UjTkj2GJSe/Hh8eUXSVWDwS', 1, '6372fda690cf0'),
-(2, '987654321', 'Melo', 'Camacho', 'Adriana', 'amelo@gmail.com', 'Amelo', '$2y$10$ZySqBAnQd8IYDbEK73qvkuQSBndE/ZxAelX3pwbwd7aNLSIjjCvD.', 2, '6372fdc63b3a9'),
-(3, '1122334455', 'Melo', 'Melo', 'Alexandra', 'alexmelo@gmail.com', 'AlexMelo', '$2y$10$2GHBJuivvWGYwOCZK08SIO07SrUl1W0FOG1KjdurbNA8qSmcKrF6i', 3, NULL),
-(16, '7686578', 'Perez', 'Gomez', 'Daniel', 'dapepe@gmail.com', 'Dapepe', '$2y$10$Z.TfZe/hSsFBG6oN6HWfFuOPF3CGnnW9MoFgv75CXfWWXV1sxBpum', 3, NULL),
-(17, '777777', 'caceres', 'forero', 'felipe', 'fecafo@gmail.com', 'fecafo', '$2y$10$rHyDwq1/GT0JsN8nfVDmA.SvObnuuIRARXs1bxEppLypRewlpqR/C', 3, NULL),
-(18, '51651615', 'Trivino', 'Barrera', 'Ricardo', 'ricardo.trivinob@gmail.com', 'rtrivino', '$2y$10$F8Go6Jg2J4s3fAkpid/x.edRi3O/DWQ933kA6CHyi5KDEbmAghp1u', 3, NULL),
-(19, '1651651', 'Trivino', 'Barrera', 'Andrey', 'andrey@gmail.com', 'andrey', '$2y$10$AYVV1AQZbuMx5yMhgvwZ7ergVNoROpeA9FRbu8ofrTkysfKmU.Ap6', 3, NULL);
+(1, '123456789', 'Munoz', 'Lara', 'Jose', 'admonlp3@gmail.com', 'joarl940', '$2y$10$MAUx.T0Dwvynow4QwbJyNe7r2nonb1UjTkj2GJSe/Hh8eUXSVWDwS', 1, NULL),
+(2, '516516157', 'Trivino', 'Barrera', 'Ricardo', 'estudiantelp3@gmail.com', 'rtrivino', '$2y$10$F8Go6Jg2J4s3fAkpid/x.edRi3O/DWQ933kA6CHyi5KDEbmAghp1u', 3, NULL),
 
 --
 -- Índices para tablas volcadas
