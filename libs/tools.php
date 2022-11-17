@@ -404,7 +404,7 @@ function enviarInstrucciones($usuario, $email, $token) {
 
     //gmail username and pasword
     $mail->Username = 'servidor2lp3@gmail.com';
-    $mail->Password = 'dlzvnvoolwdbichl';
+    $mail->Password = 'svafaikxxitpiidu';
     //$mail->Username = '3c1408f64d5eef';
     //$mail->Password = '5126b6257cf846';
     //$mail->SMTPSecure = 'tls';
