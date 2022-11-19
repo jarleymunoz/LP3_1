@@ -3,6 +3,7 @@
 use Firebase\JWT\JWT; //libreria de jwt
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use ReallySimpleJWT\Token;
 
 //require '../vendor/PHPMailer/PHPMailer/src/Exception.php';
 //require '../vendor/PHPMailer/PHPMailer/src/PHPMailer.php';
@@ -50,6 +51,19 @@ function LimpiezaKV()
 function Limpieza($cadena)
 {
     $patron = array('/<script>.*<\/script>/');
+    $cadena = preg_replace($patron, '', $cadena);
+    $cadena = htmlspecialchars($cadena);
+    return $cadena;
+}
+
+/**
+ * Función que limpia todos los datos de entrada de tokens
+ * @param cadena: Recibe la cadena a limpiar.
+ */
+// Limpieza de datos de entrada
+function LimpiezaToken($cadena)
+{
+    $patron = array('/<script>*<\/script>/');
     $cadena = preg_replace($patron, '', $cadena);
     $cadena = htmlspecialchars($cadena);
     return $cadena;
@@ -365,17 +379,25 @@ function buscarEmail($emailRec) {
     if ($res == true) {
         $usuario = $query->fetchAll(PDO::FETCH_OBJ);
         if (sizeof($usuario) > 0) {
-            //var_dump($usuario);
-            $usu = array($usuario[0]);
-            //var_dump($usu);
-            $us = $usu[0];
-            //var_dump($us);
-            $token =& crearToken();
-            //echo $token;
-            foreach ($us as $key => $value) {
-                //echo "$key: $value\n";
-                //enviar email
-                enviarInstrucciones($value, $emailRec, $token);
+            $jwt =& crearToken($usuario);
+            //print_r(json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $jwt)[1])))));
+            //echo $jwt;
+            //echo "<br>";
+            $token = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $jwt)[1]))));
+            //var_dump($token);
+            //echo "<br>";
+            foreach ($token as $key => $value) {
+                //var_dump($value);
+                //echo "<br>";
+                $valu = $value[0];
+                //var_dump($valu);
+                //echo "<br>";
+                foreach ($valu as $key => $val) {
+                    //echo "$key: $val\n";
+                    //echo "<br>";
+                    //enviar email
+                    enviarInstrucciones($val, $emailRec, $jwt);
+                }
             }
         }
         else {
@@ -425,8 +447,8 @@ function enviarInstrucciones($usuario, $email, $token) {
     $contenido = '<html>';
     $contenido .= "<p><strong>Hola " . $usuario . "</strong> Has solicitado restablecer tu clave, 
     da click en el siguiente enlace para restablecerla.</p>";
-    $contenido .= "<p>Presiona aquí: <a href='http://localhost/LP3_1/restablecer.php?token=" .
-    $token . "&usuario=" . $usuario . "'>Restablecer clave</a>";
+    $contenido .= "<p>Presiona aquí: <a href='http://localhost/Git/LP3_1/restablecer.php?id=" .
+    $token . "'>Restablecer clave</a>";
     $contenido .= "<p>Si tu no solicitaste este cambio, puedes ignorar el mensaje</p>";
     $contenido .= "</html>";
 
@@ -465,14 +487,37 @@ function enviarInstrucciones($usuario, $email, $token) {
         notificaciones('Si tienes una cuenta se te envío un correo, revisalo');
     }
     else {
-        notificaciones('Hubo un problema');
+        notificaciones('Hubo un problema de conexón');
     }
 }
 
 // Generar un Token
-function &crearToken() {
-    $token = uniqid();
-    return $token;
+function &crearToken($usuario) {
+    $header = uniqid();
+    //return $token;
+
+    // Create token header as a JSON string
+    //$header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+
+    // Create token payload as a JSON string
+    $payload = json_encode(['usuario' => $usuario]);
+
+    // Encode Header to Base64Url String
+    $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
+
+    // Encode Payload to Base64Url String
+    $base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
+
+    // Create Signature Hash
+    $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, 'abC123!', true);
+
+    // Encode Signature to Base64Url String
+    $base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+
+    // Create JWT
+    $jwt = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
+
+    return $jwt;
 }
 
 ?>

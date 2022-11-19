@@ -104,7 +104,7 @@ CREATE TABLE `usuario` (
   `usuario` varchar(20) NOT NULL,
   `clave` varchar(100) NOT NULL,
   `rol` int(1) NOT NULL,
-  `token` varchar(60) DEFAULT NULL
+  `token` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

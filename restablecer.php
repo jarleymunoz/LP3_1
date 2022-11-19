@@ -17,19 +17,34 @@
 
   //$token = Limpieza($_GET['token']);
   //echo $token;
-  if (!isset($_GET['token']) || !isset($_GET['usuario'])) {
+  if (!isset($_GET['id'])) {
     header("Location: index.php");
   } else {
     //$token=$_GET['token'];
     //$usuario=$_GET['usuario'];
-    $token = Limpieza($_GET['token']);
-    $usuario = Limpieza($_GET['usuario']);
-    //echo $token;
+    $token = Limpieza($_GET['id']);
+    //$token = $_GET['id'];
+    $toke = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $token)[1]))));
+    //var_dump($token);
+    //echo "<br>";
+    foreach ($toke as $key => $value) {
+      //var_dump($value);
+      //echo "<br>";
+      $valu = $value[0];
+      //var_dump($valu);
+      //echo "<br>";
+      foreach ($valu as $key => $val) {
+        //guardar usuario
+        $usuario = $val;
+        echo $usuario;
+        echo "<br>";
+      }
+    }
     $query = $conn->prepare("SELECT token 
                                FROM usuario 
                                WHERE usuario=:usuario ");
     $res = $query->execute([
-        'usuario' => $usuario
+      'usuario' => $usuario
     ]);
     if ($res == true) {
       $toke = $query->fetchAll(PDO::FETCH_OBJ);
@@ -39,7 +54,7 @@
       //var_dump($to);
       foreach ($to as $key => $value) {
         //echo "$key: $value\n";
-        if($value == $token) {
+        if ($value == $token) {
           //Boton de nueva clave
           if (isset($_POST["btnRestablecer"])) {
             //asigno a clave
@@ -53,19 +68,19 @@
                                                       WHERE usuario=:usuario");
               $claveNuevaHash =  password_hash($clave, PASSWORD_DEFAULT);
               $res1 = $query1->execute([
-                  'clave' => $claveNuevaHash,
-                  'usuario' => $usuario
+                'clave' => $claveNuevaHash,
+                'usuario' => $usuario
               ]);
               if ($res1 == true) {
                 notificaciones('Exito, se actualizó la clave');
                 //poner el token de la bd en null de nuevo
-                $token=null;
+                $token = null;
                 $query1 = $conn->prepare("UPDATE usuario 
                                                       SET token=:token 
                                                       WHERE usuario=:usuario");
                 $res1 = $query1->execute([
-                    'token' => $token,
-                    'usuario' => $usuario
+                  'token' => $token,
+                  'usuario' => $usuario
                 ]);
                 if ($res1 == true) {
                   //redirigir a index
@@ -120,7 +135,7 @@
       <p><input action="index.php" type="submit" value="Volver" name="btnVolver"></p>
     </form>
   </div>
-   
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" integrity="sha512-egJ/Y+22P9NQ9aIyVCh0VCOsfydyn8eNmqBy+y2CnJG+fpRIxXMS6jbWP8tVKp0jp+NO5n8WtMUAnNnGoJKi4w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 </body>
