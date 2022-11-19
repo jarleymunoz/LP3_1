@@ -41,6 +41,13 @@
             notificaciones('petición invalida');
         }
     }
+    if (isset($_POST["lnkReporte"])) {
+        if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] || '0000' == $_POST['anticsrf']) {
+            header("Location: reporte.php");
+        } else {
+            notificaciones('petición invalida');
+        }
+    }
 
     ?>
     <!-- partial:index.partial.html -->
@@ -56,6 +63,8 @@
                 <input type="submit" class="login" name="lnkModificar" value="Modificar usuario">
 
                 <input type="submit" class="login" name="lnkEliminar" value="Eliminar usuario">
+
+                <input type="submit" class="login" name="lnkReporte" value="Reporte alumnos">
             </form>
         </div>
     </div>

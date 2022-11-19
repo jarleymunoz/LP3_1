@@ -31,13 +31,11 @@
     }
 
     if (isset($_POST['btnVolver'])) {
-        
+
         if ($rolActual == 'Docente') {
             header("Location: inicio_docente.php");
-            
         } else {
             header("Location: inicio_alumno.php");
-            
         }
     }
     if (isset($_POST['btnCambio'])) {
@@ -113,7 +111,7 @@
                 <p><input type="text" placeholder="Primer apellido" id="txtPrimerApellido" name="txtPrimerApellido" value="<?php echo $data->primer_apellido ?>" pattern="[A-Za-z]+" required="required"></p>
                 <p><input type="text" placeholder="Segundo apellido" id="txtSegundoApellido" name="txtSegundoApellido" value="<?php echo $data->segundo_apellido ?>" pattern="[A-Za-z]+" required="required"></p>
                 <p><input type="text" placeholder="Nombre" id="txtNombre" name="txtNombre" value="<?php echo $data->nombre ?>" pattern="[A-Za-z]+" required="required"></p>
-                <p><input type="submit" value="Actualizar usuario" name="btnActualizar"></p>
+                <p><input type="submit" value="Actualizar datos" name="btnActualizar"></p>
             </form>
             <form class="register-container" method="post" enctype="multipart/form-data">
                 <p><input type="hidden" id="anticsrf" name="anticsrf" value="<?php echo $_SESSION['anticsrf'] ?>"></p>

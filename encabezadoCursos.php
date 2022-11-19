@@ -10,7 +10,13 @@
 
 <body>
     <?php
-   
+   if (isset($_POST["lnkVer"])) {
+    if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] || '0000' == $_POST['anticsrf']) {
+        header("Location: verCursos.php");
+    } else {
+        notificaciones('petición invalida');
+    }
+}
     if (isset($_POST["lnkCrear"])) {
         if (isset($_POST['anticsrf']) && isset($_SESSION['anticsrf']) && $_SESSION['anticsrf'] == $_POST['anticsrf'] || '0000' == $_POST['anticsrf']) {
             header("Location: crearCurso.php");
@@ -33,7 +39,7 @@
             <form method="post">
                 <br>
                 <p><input type="hidden" id="anticsrf" name="anticsrf" value="<?php echo $_SESSION['anticsrf'] ?>"></p>
-           
+                <input type="submit" class="login" name="lnkVer" value="Ver cursos">
                 <input type="submit" class="login" name="lnkCrear" value="Crear curso">
                 <input type="submit" class="login" name="lnkVolver" value="Volver">
 

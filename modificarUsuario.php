@@ -29,6 +29,7 @@
             //asigno a identificacion
             if (validarDocumento($_POST['txtIdentificacion1']) == true) {
                 $identificacion = Limpieza($_POST["txtIdentificacion1"]);
+                echo($_POST["txtIdentificacion1"]);
             } else {
                 notificaciones('Identificación inválida');
                 $identificacion = "";

@@ -46,6 +46,7 @@
               $_SESSION['usuario']['nombre']  = $nombre;
               $_SESSION['usuario']['id']      = $id;
               $_SESSION['usuario']['rol']     = $rol;
+              $_SESSION['usuario']['buscar']  = '';
               notificaciones('Datos válidos');
               switch($rol){
                 case 1:
