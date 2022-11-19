@@ -379,25 +379,42 @@ function buscarEmail($emailRec) {
     if ($res == true) {
         $usuario = $query->fetchAll(PDO::FETCH_OBJ);
         if (sizeof($usuario) > 0) {
-            $jwt =& crearToken($usuario);
+            //var_dump($usuario);
+            //echo "<br>";
+            $usu = array($usuario[0]);
+            //var_dump($usu);
+            //echo "<br>";
+            $us = $usu[0];
+            //echo "usuario de la consulta: ";
+            //var_dump($us);
+            //echo "<br>";
+            foreach ($us as $key => $val) {
+                $u = $val;
+                //echo "usuario extraído del objeto: ";
+                //var_dump($u);
+                //echo "<br>";
+            }
+            $jwt =& crearToken($u);
             //print_r(json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $jwt)[1])))));
+            //echo "jwt: ";
             //echo $jwt;
             //echo "<br>";
             $token = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $jwt)[1]))));
+            //echo "objeto con id, usuario e iat: ";
             //var_dump($token);
             //echo "<br>";
             foreach ($token as $key => $value) {
-                //var_dump($value);
-                //echo "<br>";
-                $valu = $value[0];
-                //var_dump($valu);
-                //echo "<br>";
-                foreach ($valu as $key => $val) {
-                    //echo "$key: $val\n";
+                if ($key == 'usuario') {
+                    $user = $value;
+                    //echo "usuario decodificado: ";
+                    //echo $user;
                     //echo "<br>";
-                    //enviar email
-                    enviarInstrucciones($val, $emailRec, $jwt);
-                }
+                    enviarInstrucciones($user, $emailRec, $jwt);
+                } /*else if ($key == 'iat') {
+                    echo "iat: ";
+                    echo $value;
+                    echo "<br>";
+                }*/
             }
         }
         else {
@@ -447,8 +464,9 @@ function enviarInstrucciones($usuario, $email, $token) {
     $contenido = '<html>';
     $contenido .= "<p><strong>Hola " . $usuario . "</strong> Has solicitado restablecer tu clave, 
     da click en el siguiente enlace para restablecerla.</p>";
+    $contenido .= "<p>Recuerda que tienes 5 minutos para hacerlo o deberas hacer una nueva solicitud</p>";
     $contenido .= "<p>Presiona aquí: <a href='http://localhost/Git/LP3_1/restablecer.php?id=" .
-    $token . "'>Restablecer clave</a>";
+    $token . "'>Restablecer clave</a></p>";
     $contenido .= "<p>Si tu no solicitaste este cambio, puedes ignorar el mensaje</p>";
     $contenido .= "</html>";
 
@@ -470,19 +488,6 @@ function enviarInstrucciones($usuario, $email, $token) {
         } catch (Exception $e) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
-        /*if ($res1 == true) {
-            //notificacion de exito
-            notificaciones('Mensaje enviado correctamente');
-            notificaciones('Exito, revisa tu correo');
-            //notificación segura
-            //notificaciones('Si tienes una cuenta se te envío un correo, revisalo');
-        } else {
-            //notificacion de fallo
-            notificaciones('El mensaje no se pudo enviar 1');
-            notificaciones('Lo sentimos, algo falló 1');
-            //notificación segura
-            //notificaciones('Si tienes una cuenta se te envío un correo, revisalo');
-        }*/
         //notificación segura
         notificaciones('Si tienes una cuenta se te envío un correo, revisalo');
     }
@@ -493,14 +498,19 @@ function enviarInstrucciones($usuario, $email, $token) {
 
 // Generar un Token
 function &crearToken($usuario) {
-    $header = uniqid();
+    $encrypt = uniqid();
     //return $token;
 
+    $now = new DateTimeImmutable();
+    $now2 = $now->modify('+300 seconds');
+
     // Create token header as a JSON string
-    //$header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+    $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+
+    $arr = array('id' => $encrypt, 'iat' => $now2->getTimestamp(), 'usuario' => $usuario);
 
     // Create token payload as a JSON string
-    $payload = json_encode(['usuario' => $usuario]);
+    $payload = json_encode($arr);
 
     // Encode Header to Base64Url String
     $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));

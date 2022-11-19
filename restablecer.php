@@ -20,22 +20,25 @@
   if (!isset($_GET['id'])) {
     header("Location: index.php");
   } else {
-    //$token=$_GET['token'];
-    //$usuario=$_GET['usuario'];
     $token = Limpieza($_GET['id']);
-    //$token = $_GET['id'];
     $toke = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $token)[1]))));
     //var_dump($token);
     //echo "<br>";
+    $now = new DateTimeImmutable();
+    $now->getTimestamp();
     foreach ($toke as $key => $value) {
-      //var_dump($value);
-      //echo "<br>";
-      $valu = $value[0];
-      //var_dump($valu);
-      //echo "<br>";
-      foreach ($valu as $key => $val) {
-        //guardar usuario
-        $usuario = $val;
+      if ($key == 'iat') {
+        if ( $value <= time()) {
+          echo "Sesion expiradada";
+          //forzar salida al login
+          //header("Location: index.php");
+          cerrarSesion();
+        } /*else {
+          echo "Token no ha expirado";
+        }*/
+      } else if ($key == 'usuario') {
+        $usuario = $value;
+        echo "restablece tu clave: ";
         echo $usuario;
         echo "<br>";
       }
@@ -59,8 +62,6 @@
           if (isset($_POST["btnRestablecer"])) {
             //asigno a clave
             if (validarClave($_POST['txtClave'])) {
-              //$clave = Limpieza($_POST["txtClave"]);
-              //$claveHash =  password_hash($clave, PASSWORD_DEFAULT);
               $clave = Limpieza($_POST["txtClave"]);
               //actualizar clave en bd
               $query1 = $conn->prepare("UPDATE usuario 
@@ -97,18 +98,16 @@
               }
             } else {
               notificaciones('Contraseña inválida, la clave debe tener al menos una letra minúscula, una mayúscula, un número y un caracter especial');
-              //$clave = "";
-              //$claveHash = "";
             }
           }
         } else {
-          notificaciones('No autorizado 1');
+          notificaciones('No autorizado');
           //redirigir a index
           cerrarSesion();
         }
       }
     } else {
-      notificaciones('No autorizado 2');
+      notificaciones('No autorizado');
       //redirigir a index
       cerrarSesion();
     }
