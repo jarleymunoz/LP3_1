@@ -419,7 +419,7 @@ function buscarEmail($emailRec) {
         }
         else {
             //notificación segura
-            notificaciones('Si tienes una cuenta se te envío un correo, revisalo');
+            notificaciones('Si tienes una cuenta se te envio un correo, revisalo');
             //notificaciones('Email no encontrado');
         }
     }
@@ -489,7 +489,7 @@ function enviarInstrucciones($usuario, $email, $token) {
             echo 'Excepción capturada: ',  $e->getMessage(), "\n";
         }
         //notificación segura
-        notificaciones('Si tienes una cuenta se te envío un correo, revisalo');
+        notificaciones('Si tienes una cuenta se te envio un correo, revisalo');
     }
     else {
         notificaciones('Hubo un problema de conexón');
